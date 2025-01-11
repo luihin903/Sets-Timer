@@ -2,6 +2,9 @@ package com.luihin903.setstimer;
 
 import android.os.Bundle;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -21,14 +24,20 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        MobileAds.initialize(this, status -> {});
         setContentView(R.layout.activity_main);
+
+        AdView adView = findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        adView.loadAd(adRequest);
+
 
         LinearLayout setsContainer = findViewById(R.id.setsContainer);
         sets = new Sets(this, setsContainer, LayoutInflater.from(this));
         dialog = new Dialog(this, sets);
 
         add = findViewById(R.id.add);
-        start = findViewById(R.id.start);
+        start = findViewById(R.id.play);
 
         int screenWidth = getResources().getDisplayMetrics().widthPixels;
         int screenHeight = getResources().getDisplayMetrics().heightPixels;

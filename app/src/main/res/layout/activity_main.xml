@@ -9,6 +9,15 @@
     android:orientation="vertical"
     tools:context=".MainActivity">
 
+    <com.google.android.gms.ads.AdView
+        android:id="@+id/adView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:adSize="BANNER"
+        app:adUnitId="ca-app-pub-2042283847249277/6250654551"
+        android:contentDescription="@string/ad"
+    />
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -31,14 +40,16 @@
         android:layout_gravity="bottom|end"
         app:srcCompat="@android:drawable/ic_input_add"
         app:backgroundTint="@color/design_default_color_primary"
+        android:contentDescription="@string/add"
     />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/start"
+        android:id="@+id/play"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|center"
         app:srcCompat="@android:drawable/ic_media_play"
+        android:contentDescription="@string/play"
     />
 
 

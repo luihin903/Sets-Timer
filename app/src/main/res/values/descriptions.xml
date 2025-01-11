@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="ad">A banner advertisement</string>
+    <string name="add">An add button to add set</string>
+    <string name="play">A play button to play the sets</string>
+    <string name="set">A set with name and time</string>
+</resources>
