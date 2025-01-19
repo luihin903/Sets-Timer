@@ -10,12 +10,6 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.io.Serializable;
 
 public class Sets implements Serializable {
@@ -25,80 +19,83 @@ public class Sets implements Serializable {
     transient LayoutInflater inflater;
     private Set head;
     private Set tail;
+    private Set playingSet;
+    private String name;
+    private boolean saved;
+    private int numSet;
 
     public Sets(MainActivity mainActivity, LinearLayout container, LayoutInflater inflater) {
         this.mainActivity = mainActivity;
         this.container = container;
         this.inflater = inflater;
-
-        read();
+        this.saved = false;
+        this.numSet = 0;
     }
 
     public void add(String name, Time time) {
         Set set = new Set(name, time);
         set.nameView.setText(name);
         set.timeView.setText(time.toString());
-        container.addView(set.getSetView());
+        container.addView(set.setView);
 
         if (head == null) {
             head = set;
-            tail = set;
         }
         else {
             tail.next = set;
-            tail = set;
         }
-
-        save();
+        tail = set;
+        this.numSet ++;
     }
 
     public void start() {
+        Log.d("DEBUG", name + " starts playing");
         if (head == null) return;
         Set set = head;
         set.start();
     }
 
-    private void save() {
-        try {
-            FileOutputStream fileOutputStream = mainActivity.openFileOutput("sets.ser", mainActivity.MODE_PRIVATE);
-            ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
-            objectOutputStream.writeObject(this);
-            Log.d("DEBUG", "Saved");
-        } catch (Exception e) {
-            e.printStackTrace();
+    public void stop() {
+        if (playingSet != null && playingSet.timer != null) {
+            playingSet.timer.cancel();
         }
     }
 
-    private void read() {
-        Log.d("DEBUG", "Read " + mainActivity.getFilesDir().toString());
-        if (new File(mainActivity.getFilesDir(), "sets.ser").exists()) {
-            try {
-                FileInputStream fileInputStream = mainActivity.openFileInput("sets.ser");
-                ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
-                Sets sets = (Sets) objectInputStream.readObject();
-                this.head = sets.head;
-                this.tail = sets.tail;
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            Set set = head;
-            while (set != null) {
-                set.setView = inflater.inflate(R.layout.item_set, container, false);
-                set.nameView = set.setView.findViewById(R.id.name);
-                set.timeView = set.setView.findViewById(R.id.time);
-                set.nameView.setText(set.name);
-                set.timeView.setText(set.time.toString());
-                container.addView(set.getSetView());
-                set = set.next;
-            }
+    public void show() {
+        container.removeAllViews();
+        Set set = head;
+        while (set != null) {
+            set.setView = inflater.inflate(R.layout.item_set, container, false);
+            set.nameView = set.setView.findViewById(R.id.name);
+            set.timeView = set.setView.findViewById(R.id.time);
+            set.nameView.setText(set.name);
+            set.timeView.setText(set.time.toString());
+            container.addView(set.setView);
+            set = set.next;
         }
     }
+
+    public void save(String name) {
+        this.name = name;
+        this.saved = true;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("<%s (%d)>", name, numSet);
+    }
+
+    public String getName() {
+        return this.name;
+    }
+
 
     private class Set implements Serializable {
 
         transient View setView;
         transient TextView nameView;
         transient TextView timeView;
+        transient CountDownTimer timer;
         private String name;
         private Time time;
         private Set next;
@@ -113,9 +110,10 @@ public class Sets implements Serializable {
 
         public void start() {
             this.timeView.setTextColor(Color.BLACK);
-            long millisecond = time.toMillisecond();
+            playingSet = this;
 
-            CountDownTimer timer = new CountDownTimer(millisecond, 1000) {
+            long millisecond = time.toMillisecond();
+            timer = new CountDownTimer(millisecond, 1000) {
                 @Override
                 public void onTick(long left) {
                     int hour = (int) (left / 3600 / 1000);
@@ -142,16 +140,19 @@ public class Sets implements Serializable {
             ToneGenerator tone = new ToneGenerator(AudioManager.STREAM_MUSIC, 100);
             tone.startTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD,200);
 
-            if (next != null) next.start();
+            if (next == null) {
+                tone.startTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD, 400);
+                head.start();
+            }
+            else {
+                next.start();
+            }
         }
 
         public String getName() {
             return this.name;
         }
 
-        public View getSetView() {
-            return this.setView;
-        }
 
     }
 

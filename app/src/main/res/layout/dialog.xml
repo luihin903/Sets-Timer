@@ -5,12 +5,13 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:padding="16dp"
+    android:contentDescription="To set information of new set"
 >
     
     <EditText
         android:id="@+id/setNameInput"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="48dp"
         android:hint="Enter Set Name"
         android:inputType="text"
     />
@@ -22,6 +23,7 @@
         android:orientation="horizontal"
         android:padding="16dp"
         android:gravity="center"
+        android:contentDescription="To set the time component"
     >
 
         <NumberPicker
@@ -29,6 +31,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
+            android:contentDescription="To set the hour component"
         />
 
         <NumberPicker
@@ -36,6 +39,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
+            android:contentDescription="To set the minute component"
         />
 
         <NumberPicker
@@ -43,6 +47,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
+            android:contentDescription="To set the second component"
         />
 
     </LinearLayout>

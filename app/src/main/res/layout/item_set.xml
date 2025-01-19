@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:contentDescription="@string/set"
+    android:contentDescription="A set"
 >
 
     <TextView
@@ -13,7 +13,9 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:padding="16dp"
+        android:paddingBottom="0dp"
         android:textSize="16sp"
+        android:contentDescription="Name of a set"
     />
 
     <TextView
@@ -24,12 +26,14 @@
         android:paddingTop="0dp"
         android:textSize="16sp"
         android:textColor="@color/gray"
+        android:contentDescription="Time of a set"
     />
 
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="@color/gray"
+        android:contentDescription="Separate 2 sets"
     />
 
 </LinearLayout>
